@@ -3,9 +3,162 @@ import { useState, useEffect } from "react";
 import { Input } from "../components/ui/input";
 import { Card, CardContent } from "../components/ui/card";
 
+const maquinas = [
+  "Torno CNC",
+  "Centro de Usinagem",
+  "Fresa Convencional",
+  "Torno Convencional",
+  "Retífica Plana",
+  "Retífica Cilíndrica",
+  "Serra Fita",
+  "Serra Circular",
+  "Eletroerosão"
+];
 const materiais = ["Aço 1020", "Aço 1045", "Inox 304", "Inox 316", "Alumínio 6351", "Alumínio 7075", "Latão", "Bronze", "Ferro Fundido", "Nylon", "PVC", "Acrílico", "Cobre", "PEAD", "Poliacetal", "Titânio"];
-const ferramentas = ["Broca HSS", "Broca Carbide", "Fresa HSS", "Fresa Carbide", "Macho Manual", "Macho Máquina", "Rebolo", "Serra Circular", "Serra Fita"];
-const operacoes = ["Furação", "Rosqueamento", "Corte", "Fresamento", "Retífica", "Faceamento", "Alargamento", "Rebaixo", "Chanframento"];
+const ferramentas = [
+  // Furação
+  "Broca HSS",
+  "Broca Carbide",
+  "Broca de Passo",
+  "Broca Escalonada",
+  "Broca Parafuso",
+  "Broca Espiral",
+  "Broca de Centro",
+  "Broca Canhão",
+  "Broca de Ponta Revestida",
+  // Fresamento
+  "Fresa HSS",
+  "Fresa Carbide",
+  "Fresa de Topo",
+  "Fresa de Topo Esférica",
+  "Fresa de Face",
+  "Fresa de Canal",
+  "Fresa de Copo",
+  "Fresa Angular",
+  "Fresa de Perfil",
+  "Fresa de Raio",
+  // Torneamento
+  "Ferramenta de Torneamento Reta",
+  "Ferramenta de Torneamento Intercambiável",
+  "Ferramenta de Canal",
+  "Ferramenta de Rosca",
+  "Ferramenta de Acabamento",
+  "Ferramenta de Rebaixo",
+  "Ferramenta de Mandrilhar",
+  // Rosqueamento
+  "Macho Manual",
+  "Macho Máquina",
+  "Macho Espiral",
+  "Macho Cônico",
+  "Macho de Passo Fino",
+  // Corte e Serra
+  "Serra Circular",
+  "Serra Fita",
+  "Serra de Disco",
+  // Alargamento e Escareamento
+  "Alargador Manual",
+  "Alargador Máquina",
+  "Alargador Cônico",
+  "Escareador",
+  // Retífica
+  "Rebolo Reto",
+  "Rebolo Cônico",
+  "Rebolo Copo",
+  // Mandriladora
+  "Mandriladora",
+  // Outros
+  "Pastilha de Torneamento",
+  "Ferramenta de Corte Intercambiável",
+  "Placa de Torno",
+  "Ferramenta de Polimento",
+  "Ferramenta de Acabamento Superficial"
+];
+const operacoes = [
+  // Operações básicas
+  "Furação",
+  "Alargamento",
+  "Escareamento",
+  "Rebaixamento",
+  "Rosqueamento",
+  "Corte",
+  "Fresamento",
+  "Torneamento",
+  "Faceamento",
+  "Mandrilamento",
+  "Rebaixo",
+  "Chanframento",
+  "Centralização",
+  "Desbaste",
+  "Acabamento",
+  "Brochamento",
+  "Aplainamento",
+  "Ranhuramento",
+  "Serrilhamento",
+  "Corte Longitudinal",
+  "Corte Transversal",
+
+  // Operações de retífica e polimento
+  "Retífica Plana",
+  "Retífica Cilíndrica Externa",
+  "Retífica Cilíndrica Interna",
+  "Retífica Sem Centros",
+  "Polimento",
+  "Lapidação",
+  "Superacabamento",
+
+  // Operações especiais
+  "Eletroerosão a Fio (EDM)",
+  "Eletroerosão por Penetração",
+  "Furação Profunda",
+  "Furação Helicoidal",
+  "Furação Angular",
+  "Fresamento CNC 2D",
+  "Fresamento CNC 3D",
+  "Fresamento Contorno",
+  "Fresamento de Bolsas",
+  "Fresamento de Ranhuras",
+  "Fresamento de Engrenagens",
+  "Torneamento CNC",
+  "Roscamento CNC",
+  "Corte por Laser",
+  "Corte por Jato de Água",
+  "Corte por Plasma",
+
+  // Acabamento e montagem
+  "Desbarbamento",
+  "Rebarbação",
+  "Montagem de Conjunto",
+  "Teste de Dimensional",
+  "Montagem de Ferramenta",
+  "Ajuste Fino",
+  "Inspeção Final",
+  "Limpeza de Peça",
+  "Tratamento Térmico",
+  "Tratamento Superficial",
+
+  // Outras
+  "Revestimento",
+  "Gravação",
+  "Soldagem",
+  "Prensagem",
+  "Dobramento",
+  "Furação Concêntrica",
+  "Desempeno",
+  "Usinagem de Superfícies Planas",
+  "Usinagem de Superfícies Cilíndricas",
+  "Usinagem de Canais",
+  "Usinagem de Furos Passantes",
+  "Usinagem de Furos Vazados",
+  "Usinagem de Roscas Internas",
+  "Usinagem de Roscas Externas",
+  "Usinagem de Engrenagens",
+  "Usinagem de Fitas",
+  "Usinagem de Estrias",
+  "Usinagem de Cavidades",
+  "Usinagem de Moldes",
+  "Usinagem de Matrizes",
+  "Usinagem de Componentes Especiais"
+];
 
 const velocidadeCorte = {
   "Aço 1020": { "Broca HSS": 25, "Broca Carbide": 60, "Fresa HSS": 30, "Fresa Carbide": 90 },
